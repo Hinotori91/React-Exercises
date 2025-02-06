@@ -21,10 +21,19 @@ function Board({ xIsNext, squares, onPlay }) {
       <div className="status">{status}</div>
       <div className="flex flex-wrap w-40">
         {squares.map(function (square, i) {
-          return <Square value={square} onSquareClick={() => handleClick(i)} />;
+          return <Square key={i} value={square} onSquareClick={() => handleClick(i)} />;
         })}
       </div>
     </>
+  );
+}
+
+function ToggleButton({ checked, onChange }) {
+  return (
+    <label className="switch">
+      <input type="checkbox" checked={checked} onChange={onChange} />
+      <span className="slider">{status}</span>
+    </label>
   );
 }
 
@@ -33,6 +42,11 @@ export default function Game() {
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
+
+  const [isChecked, setIsChecked] = useState(true);
+  const handleCheckboxChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
 
   function handlePlay(nextSquares) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
@@ -46,16 +60,20 @@ export default function Game() {
 
   const moves = history.map((squares, move) => {
     let description;
+
     description = (move > 0) ? "Go to move #" + move : "Go to game start";
 
     if (move == currentMove) {
       description = "You are at move #" + move;
     }
-
     return (
       <li key={move}><button onClick={() => jumpTo(move)}>{description}</button></li>
     );
   });
+
+  if (!isChecked) {
+    moves.sort().reverse();
+  }
 
   return (
     <div className="game">
@@ -63,6 +81,7 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
+        <ToggleButton checked={isChecked} onChange={handleCheckboxChange} />
         <ol>{moves}</ol>
       </div>
     </div>
@@ -93,7 +112,7 @@ function calculateWinner(squares) {
 /*TODO
 x Rewrite Board to use two loops to make the squares instead of hardcoding them.
 X For the current move only, show “You are at move #…” instead of a button.
-- Add a toggle button that lets you sort the moves in either ascending or descending order.
+x Add a toggle button that lets you sort the moves in either ascending or descending order.
 - When someone wins, highlight the three squares that caused the win (and when no one wins, display a message about the result being a draw).
 - Display the location for each move in the format (row, col) in the move history list.
 */
