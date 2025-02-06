@@ -19,20 +19,10 @@ function Board({ xIsNext, squares, onPlay }) {
   return (
     <>
       <div className="status">{status}</div>
-      <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+      <div className="flex flex-wrap w-40">
+        {squares.map(function (square, i) {
+          return <Square value={square} onSquareClick={() => handleClick(i)} />;
+        })}
       </div>
     </>
   );
@@ -94,8 +84,8 @@ function calculateWinner(squares) {
 
 
 /*TODO
+x Rewrite Board to use two loops to make the squares instead of hardcoding them.
 - For the current move only, show “You are at move #…” instead of a button.
-- Rewrite Board to use two loops to make the squares instead of hardcoding them.
 - Add a toggle button that lets you sort the moves in either ascending or descending order.
 - When someone wins, highlight the three squares that caused the win (and when no one wins, display a message about the result being a draw).
 - Display the location for each move in the format (row, col) in the move history list.
